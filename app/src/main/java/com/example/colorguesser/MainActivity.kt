@@ -2,16 +2,12 @@ package com.example.colorguesser
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,11 +25,10 @@ class MainActivity : AppCompatActivity() {
         var score = 0
         var correctHex = "#000000"
         var colorArray: Array<String> = arrayOf("#000000", "#000000", "#000000", "#000000")
-        val buttonArray: Array<Button> = arrayOf(button1, button2, button3, button4)
-
+        val colorButtonArray: Array<Button> = arrayOf(button1, button2, button3, button4)
 
         fun gameLoop(){
-            setColors(colorArray, buttonArray)
+            setColors(colorArray, colorButtonArray)
             correctHex = colorArray[(0..3).random()]
             colorText.text = correctHex.chunked(2).joinToString(separator = " ")
             scoreText.text = "Score: $score"
@@ -46,51 +41,37 @@ class MainActivity : AppCompatActivity() {
             gameLoop()
         }
 
+        fun wrongAnswer(){
+            revealColors(colorArray, colorButtonArray)
+            for(button in colorButtonArray) button.isClickable = false
+            restartButton.visibility = View.VISIBLE
+        }
+
         button1.setOnClickListener {
-            if(isAnswerCorrect(colorArray[0], correctHex)){
-                correctAnswer()
-            } else {
-                revealColors(colorArray, buttonArray)
-                for(button in buttonArray) button.isClickable = false
-                restartButton.visibility = View.VISIBLE
-            }
+            if(isAnswerCorrect(colorArray[0], correctHex)) correctAnswer()
+            else wrongAnswer()
         }
 
         button2.setOnClickListener {
-            if(isAnswerCorrect(colorArray[1], correctHex)){
-                correctAnswer()
-            } else {
-                revealColors(colorArray, buttonArray)
-                for(button in buttonArray) button.isClickable = false
-                restartButton.visibility = View.VISIBLE
-            }
+            if(isAnswerCorrect(colorArray[1], correctHex)) correctAnswer()
+            else wrongAnswer()
         }
 
         button3.setOnClickListener {
-            if(isAnswerCorrect(colorArray[2], correctHex)){
-                correctAnswer()
-            } else {
-                revealColors(colorArray, buttonArray)
-                for(button in buttonArray) button.isClickable = false
-                restartButton.visibility = View.VISIBLE
-            }
+            if(isAnswerCorrect(colorArray[2], correctHex)) correctAnswer()
+            else wrongAnswer()
         }
 
         button4.setOnClickListener {
-            if(isAnswerCorrect(colorArray[3], correctHex)){
-                correctAnswer()
-            } else {
-                revealColors(colorArray, buttonArray)
-                for(button in buttonArray) button.isClickable = false
-                restartButton.visibility = View.VISIBLE
-            }
+            if(isAnswerCorrect(colorArray[3], correctHex)) correctAnswer()
+            else wrongAnswer()
         }
 
         restartButton.setOnClickListener{
             score = 0
-            hideColors(buttonArray)
+            hideColors(colorButtonArray)
             restartButton.visibility = View.GONE
-            for(button in buttonArray) button.isClickable = true
+            for(button in colorButtonArray) button.isClickable = true
             gameLoop()
         }
     }
