@@ -27,24 +27,24 @@ class MainActivity : AppCompatActivity() {
         restartButton.visibility = View.GONE
 
         var score = 0
-        var colorArray: Array<String> = arrayOf(getRandomHex(), getRandomHex(), getRandomHex(), getRandomHex())
-
+        var correctHex = "#000000"
+        var colorArray: Array<String> = arrayOf("#000000", "#000000", "#000000", "#000000")
         val buttonArray: Array<Button> = arrayOf(button1, button2, button3, button4)
 
-        setColors(colorArray, buttonArray)
 
-        var correctHex = colorArray[(0..3).random()]
-        colorText.text = correctHex.chunked(2).joinToString(separator = " ")
-
-
-        fun correctAnswer(){
-            score++
+        fun gameLoop(){
             setColors(colorArray, buttonArray)
             correctHex = colorArray[(0..3).random()]
             colorText.text = correctHex.chunked(2).joinToString(separator = " ")
             scoreText.text = "Score: $score"
         }
 
+        gameLoop()
+
+        fun correctAnswer(){
+            score++
+            gameLoop()
+        }
 
         button1.setOnClickListener {
             if(isAnswerCorrect(colorArray[0], correctHex)){
@@ -84,14 +84,10 @@ class MainActivity : AppCompatActivity() {
 
         restartButton.setOnClickListener{
             score = 0
-            setColors(colorArray, buttonArray)
-            correctHex = colorArray[(0..3).random()]
-            colorText.text = correctHex.chunked(2).joinToString(separator = " ")
-            scoreText.text = "Score: $score"
-            for (button in buttonArray){
-                button.text = ""
-            }
+            hideColors(buttonArray)
             restartButton.visibility = View.GONE
+
+            gameLoop()
         }
     }
 
@@ -100,6 +96,10 @@ class MainActivity : AppCompatActivity() {
         for((index, button) in buttonArray.withIndex()){
             button.text = colorArray[index].chunked(2).joinToString(separator = " ")
         }
+    }
+
+    private fun hideColors(buttonArray: Array<Button>){
+        for(button in buttonArray) button.text = ""
     }
 
     private fun setColors(colorArray: Array<String>, buttonArray: Array<Button>) {
