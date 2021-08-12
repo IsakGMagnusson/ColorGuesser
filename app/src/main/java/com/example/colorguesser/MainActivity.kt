@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                 correctAnswer()
             } else {
                 revealColors(colorArray, buttonArray)
+                for(button in buttonArray) button.isClickable = false
                 restartButton.visibility = View.VISIBLE
             }
         }
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
                 correctAnswer()
             } else {
                 revealColors(colorArray, buttonArray)
+                for(button in buttonArray) button.isClickable = false
                 restartButton.visibility = View.VISIBLE
             }
         }
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                 correctAnswer()
             } else {
                 revealColors(colorArray, buttonArray)
+                for(button in buttonArray) button.isClickable = false
                 restartButton.visibility = View.VISIBLE
             }
         }
@@ -78,6 +81,7 @@ class MainActivity : AppCompatActivity() {
                 correctAnswer()
             } else {
                 revealColors(colorArray, buttonArray)
+                for(button in buttonArray) button.isClickable = false
                 restartButton.visibility = View.VISIBLE
             }
         }
@@ -86,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             score = 0
             hideColors(buttonArray)
             restartButton.visibility = View.GONE
-
+            for(button in buttonArray) button.isClickable = true
             gameLoop()
         }
     }
