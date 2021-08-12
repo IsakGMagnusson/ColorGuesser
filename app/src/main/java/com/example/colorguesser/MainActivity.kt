@@ -9,6 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,16 +23,19 @@ class MainActivity : AppCompatActivity() {
         val button2 = findViewById<Button>(R.id.button2)
         val button3 = findViewById<Button>(R.id.button3)
         val button4 = findViewById<Button>(R.id.button4)
+        val restartButton = findViewById<Button>(R.id.restartButton)
+        restartButton.visibility = View.GONE
 
+        var score = 0
         var colorArray: Array<String> = arrayOf(getRandomHex(), getRandomHex(), getRandomHex(), getRandomHex())
+
         val buttonArray: Array<Button> = arrayOf(button1, button2, button3, button4)
 
         setColors(colorArray, buttonArray)
 
-        var score = 0
-
         var correctHex = colorArray[(0..3).random()]
         colorText.text = correctHex.chunked(2).joinToString(separator = " ")
+
 
         fun correctAnswer(){
             score++
@@ -39,11 +45,13 @@ class MainActivity : AppCompatActivity() {
             scoreText.text = "Score: $score"
         }
 
+
         button1.setOnClickListener {
             if(isAnswerCorrect(colorArray[0], correctHex)){
                 correctAnswer()
             } else {
-                removeWrong(colorArray.indexOf(correctHex), buttonArray)
+                revealColors(colorArray, buttonArray)
+                restartButton.visibility = View.VISIBLE
             }
         }
 
@@ -51,7 +59,8 @@ class MainActivity : AppCompatActivity() {
             if(isAnswerCorrect(colorArray[1], correctHex)){
                 correctAnswer()
             } else {
-                removeWrong(colorArray.indexOf(correctHex), buttonArray)
+                revealColors(colorArray, buttonArray)
+                restartButton.visibility = View.VISIBLE
             }
         }
 
@@ -59,7 +68,8 @@ class MainActivity : AppCompatActivity() {
             if(isAnswerCorrect(colorArray[2], correctHex)){
                 correctAnswer()
             } else {
-                removeWrong(colorArray.indexOf(correctHex), buttonArray)
+                revealColors(colorArray, buttonArray)
+                restartButton.visibility = View.VISIBLE
             }
         }
 
@@ -67,23 +77,28 @@ class MainActivity : AppCompatActivity() {
             if(isAnswerCorrect(colorArray[3], correctHex)){
                 correctAnswer()
             } else {
-                removeWrong(colorArray.indexOf(correctHex), buttonArray)
+                revealColors(colorArray, buttonArray)
+                restartButton.visibility = View.VISIBLE
             }
+        }
+
+        restartButton.setOnClickListener{
+            score = 0
+            setColors(colorArray, buttonArray)
+            correctHex = colorArray[(0..3).random()]
+            colorText.text = correctHex.chunked(2).joinToString(separator = " ")
+            scoreText.text = "Score: $score"
+            for (button in buttonArray){
+                button.text = ""
+            }
+            restartButton.visibility = View.GONE
         }
     }
 
-    private fun removeWrong(colorPos: Int, buttonArray: Array<Button>){
+
+    private fun revealColors(colorArray: Array<String>, buttonArray: Array<Button>){
         for((index, button) in buttonArray.withIndex()){
-            if(index != colorPos){
-                button.visibility = View.GONE
-            } else{
-                button.text = "reset"
-                button.setOnClickListener{
-                    val intent = intent
-                    finish()
-                    startActivity(intent)
-                }
-            }
+            button.text = colorArray[index].chunked(2).joinToString(separator = " ")
         }
     }
 
